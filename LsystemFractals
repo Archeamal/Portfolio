@@ -1,0 +1,217 @@
+import math
+import turtle
+import time
+
+# so after messing around with turtle and drawing the geometric series, i found a video about making patterns with lsystems
+# https://www.youtube.com/watch?v=f6ra024-ASY    Im gonna try to take this idea and make something similar in python 
+
+# basically an Lsystem will recursivly iterate a string, like turn x into xxy  and turn y into yxy, and repeat
+# x -> xxy -> xxyxxyyxy -> xxyxxyyxyxxyxxyyxyyxyxxyyxy, etc
+# we'll do this with an alphabet we make and assign all the characters to a turtles function, and each iteration will follow the instructions represented by our new string
+# once we have this all working itll be as easy as swapping some numbers around to make lots and lots of fractals
+# btw a fractal is in essence a recurssive shape, so while there are many famous patterns we can try to make, theres probably lots of interesting ones with no name
+savedPos = []
+posMark = (-1)
+
+
+
+
+#this is the function that recieves our seed string and recursivly makes subsequent child strings based on the iter8s and the condition
+def lSystem(iter8s, ax, condition):
+    seed = ax
+    if iter8s == 0:
+        return ax
+    germSeed = ""
+    for _ in range(iter8s):
+        germSeed = "".join(condition[i] if i in condition else i for i in seed)
+        seed = germSeed
+    return germSeed
+    
+    
+
+def savePos():
+    x = turtle.xcor()
+    y = turtle.ycor()
+    h = turtle.heading()
+    position = [x,y,h]
+    savedPos.append(position)
+    posMark = posMark + 1
+
+def moveNoDraw(moveDist):
+    turtle.penup()
+    turtle.forward(moveDist)
+    turtle.pendown
+    
+
+#alphabet
+# this is where each character in the string is interpretted as an instruction
+def lSysTransl8(shape, sys, angle, moveDist):
+    #time.sleep(3)
+    i = 0
+    for ex in sys:
+        if ex == 'L':
+            turtle.left(angle)
+        elif ex == 'R':
+            turtle.right(angle)
+        elif ex == 'D':
+            turtle.forward(moveDist)
+        elif ex == 'F':
+            moveNoDraw(moveDist)
+        elif ex == 'E': # special move for aperiodic monotile
+            turtle.forward(math.sqrt(3)*25) # ONLY *50 TO FIT SCREEN, FOR PRETTY NUMBERS USE 100
+
+#this main function receives all our arguments, after some screen, heading, and position adjusting this function will call
+#our iterator with the arguments we pass here
+def main(iter8s, ax, condition, angle, dist):
+    
+    sys = lSystem(iter8s, ax, condition) #iter8s, ax, condition
+    shape = turtle.Turtle()
+    sc = turtle.Screen()
+    sc.setup(450, 450)
+
+    turtle.up()
+    turtle.backward(0)
+    turtle.left(90)
+    turtle.backward(0)
+    turtle.left(0)
+    turtle.down()
+    turtle.penup()
+    turtle.setpos(-250,0)
+    turtle.pendown()
+    turtle.speed(0)
+    turtle.pensize(2)
+    shape.hideturtle
+
+    lSysTransl8(shape, sys, angle, dist)
+  
+  # for now this is where we would select witch fractal to draw, below this block are all the different
+  #  fractal, each with their own values for ax,condition,iters,dist, and angle
+  # i will eventually add an input prompt at the beginning of the script to give a sensible way of 
+  # choosing a fractal to draw, at the moment its a messy playground
+
+pentaplexIter = 99
+einsteinTile = 99
+hexagon = 99
+boxFract = 99
+UNNAMED1 = 99
+UNNAMED2 = 99
+UNNAMED3 = 1
+
+if UNNAMED3 == 1:
+    ax = "DRDRDRD"
+    condition = {"D":"DDRDRDRDRDRDLDLLLDDLDLDLDLDLDRDR"}
+    
+    iter8s = 3
+    angle = 90
+    dist = 5
+
+if UNNAMED2 == 1:
+    ax = "DRDRDRD"
+    condition = {"D":"DDRDRDRDRDRDLDLLLDDLDLDLDLDLDRD"}
+    #condition = {"D":"DDRDRDRDRDRDLD"}
+    iter8s = 3
+    angle = 90
+    dist = 3
+
+if UNNAMED1 == 1: #max 3
+    ax = "DLDLDLD"
+    condition = {"D":"LDRDDLDRDRDLDLDRRRD"}
+    iter8s = 3
+    angle = 90
+    dist = 10
+
+if boxFract == 3:
+    ax = "DLDLDLD"
+    condition = {"D":"DLDRDRDLD"}
+    iter8s = 3
+    angle = 90
+    dist = 10
+
+if boxFract == 2:
+    ax = "DLDLDLD"
+    condition = {"D":"DLDRDRDLD"}
+    iter8s = 2
+    angle = 90
+    dist = 10
+
+if boxFract == 0:
+    ax = "DLDLDLD"
+    condition = {"D":"DLDRDRDLD"}
+    iter8s = 0
+    angle = 90
+    dist = 100
+
+if boxFract == 1:
+    ax = "DLDLDLD"
+    condition = {"D":"DLDRDRDLD"}
+    iter8s = 1
+    angle = 90
+    dist = 100
+
+if hexagon ==0:
+    condition = {}
+    iter8s = 0
+    angle = 60
+
+
+if einsteinTile == 0:
+                            #           ~~    MIGHT BE WRONG HERE
+ #  ax = "DLLDRRRERRELLLDRDRRRERRELLLDRRDDRRDRRRELLERR"
+  #  ax = "ERRRDLLDRRRERRELLLDRRDRRRERRELLLDRRDDRRDRRRELL"   def not THE aperiodic monotile, but close? found LOGO turtle script on github, said the E move im looking for was a*tan(60) but its not the hat
+    ax = "RRRDLLDRRRERRELLLDRRDRRRERRELLLDRRDDRRDRRRELLE"
+    condition = {"D":"DLLDRRRERRELLLDRRDRRRERRELLLDRRDDLLDRRRELLE"}
+    iter8s = 0
+    angle = 30
+    dist = (1*50) # ONLY *50 TO FIT SCREEN, FOR PRETTY NUMBERS USE 100
+if einsteinTile == 1:                   
+    ax = "RRRDLLDRRRERRELLLDRRDRRRERRELLLDRRDDRRDRRRELLE"
+    condition = {"D":"LLLEERRRDRRDLLLERRELLLDLLDDLLDRRRELLELLLDLLDRRRELLELLLDLLE"}
+    #condition = {"D":"LRLRLRLRLRLRLRLRLRLRLRLRR"}
+    iter8s = 1
+    angle = 30
+    dist = (1*25) # ONLY *25 TO FIT SCREEN, FOR PRETTY NUMBERS USE 100
+if pentaplexIter == 6: # dont recomend
+    ax = "DRRDRRDRRDRRD"
+    condition = {"D":"DRRDRRDRRRRRDLDRRD"}
+    iter8s = 6
+    angle = 36
+    dist = 1.25
+if pentaplexIter == 5:
+    ax = "DRRDRRDRRDRRD"
+    condition = {"D":"DRRDRRDRRRRRDLDRRD"}
+    iter8s = 5
+    angle = 36
+    dist = 2.5
+if pentaplexIter == 4:
+    ax = "DRRDRRDRRDRRD"
+    condition = {"D":"DRRDRRDRRRRRDLDRRD"}
+    iter8s = 4
+    angle = 36
+    dist = 5
+if pentaplexIter == 0:
+    ax = "DRRDRRDRRDRRD"
+    condition = {"D":"DRRDRRDRRRRRDLDRRD"}
+    iter8s = 0
+    angle = 36
+    dist = 100
+if pentaplexIter == 1:
+    ax = "DRRDRRDRRDRRD"
+    condition = {"D":"DRRDRRDRRRRRDLDRRD"}
+    iter8s = 1
+    angle = 36
+    dist = 50
+if pentaplexIter == 2:
+    ax = "DRRDRRDRRDRRD"
+    condition = {"D":"DRRDRRDRRRRRDLDRRD"}
+    iter8s = 2
+    angle = 36
+    dist = 20
+if pentaplexIter == 3:
+    ax = "DRRDRRDRRDRRD"
+    condition = {"D":"DRRDRRDRRRRRDLDRRD"}
+    iter8s = 3
+    angle = 36
+    dist = 10
+
+main(iter8s, ax, condition, angle, dist)
+turtle.mainloop()
