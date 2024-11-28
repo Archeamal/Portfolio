@@ -1,2 +1,2 @@
 # yayayay
-All my lil projects
+my lil projects
